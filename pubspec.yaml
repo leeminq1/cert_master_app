@@ -1,0 +1,55 @@
+name: cert_master
+description: "자격증 마스터 - 23개 국가기술자격증 학습 앱"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.8
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # 데이터베이스 (SQLite ORM)
+  drift: ^2.20.0
+  sqlite3_flutter_libs: ^0.5.0
+  path_provider: ^2.1.0
+  path: ^1.9.0
+
+  # 상태관리
+  flutter_riverpod: ^2.5.0
+  riverpod_annotation: ^2.3.0
+
+  # 라우팅
+  go_router: ^13.0.0
+
+  # 폰트
+  google_fonts: ^6.2.0
+
+  # 알림
+  flutter_local_notifications: ^17.0.0
+  timezone: ^0.9.0
+
+  # 차트
+  fl_chart: ^0.68.0
+
+  # 파일 / 공유
+  share_plus: ^12.0.2
+  file_picker: ^8.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.0
+  drift_dev: ^2.20.0
+  riverpod_generator: ^2.4.0
+  riverpod_lint: ^2.3.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/data/

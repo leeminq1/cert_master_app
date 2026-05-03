@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<title>자격증 마스터 — 개발 계획서</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="deck-stage.js"></script>
+<style>
+:root {
+  --bg:#0E1116; --surface:#161A22; --surface2:#1E232E; --surface3:#272D3A;
+  --border:rgba(255,255,255,0.08); --text:#E7ECF3; --dim:#9AA3B2; --mute:#5F6878;
+  --lime:#B6F36C; --amber:#F2B355; --rose:#F2768A; --blue:#7AB8FF; --purple:#C4A6FF;
+  --font:"Pretendard",-apple-system,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+* { box-sizing: border-box; word-break: keep-all; overflow-wrap: break-word; }
+html, body { margin: 0; padding: 0; background: #000; font-family: var(--font); }
+deck-stage > section {
+  width: 1920px; height: 1080px;
+  background: var(--bg); color: var(--text);
+  padding: 80px 96px;
+  display: flex; flex-direction: column;
+  font-family: var(--font);
+  position: relative;
+}
+.eyebrow {
+  font-family: var(--mono); font-size: 14px; font-weight: 600;
+  color: var(--lime); letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 24px;
+}
+h1 { font-size: 88px; font-weight: 800; letter-spacing: -2.5px; line-height: 1.05; margin: 0 0 24px; text-wrap: pretty; }
+h2 { font-size: 56px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.1; margin: 0 0 36px; text-wrap: pretty; }
+h3 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin: 0 0 12px; }
+p, li { font-size: 22px; line-height: 1.5; color: var(--dim); }
+.lead { font-size: 28px; line-height: 1.55; color: var(--dim); max-width: 1200px; }
+.page-num {
+  position: absolute; bottom: 40px; right: 96px;
+  font-family: var(--mono); font-size: 14px; color: var(--mute); letter-spacing: 2px;
+}
+.page-tag {
+  position: absolute; top: 40px; right: 96px;
+  font-family: var(--mono); font-size: 12px; color: var(--mute); letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px;
+}
+.card-lime { background: rgba(182,243,108,0.08); border-color: rgba(182,243,108,0.25); }
+.card-amber { background: rgba(242,179,85,0.08); border-color: rgba(242,179,85,0.25); }
+.card-rose { background: rgba(242,118,138,0.08); border-color: rgba(242,118,138,0.25); }
+.card-blue { background: rgba(122,184,255,0.08); border-color: rgba(122,184,255,0.25); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+pre, code, .mono { font-family: var(--mono); }
+pre {
+  background: #0a0d12; border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px 28px; font-size: 18px; line-height: 1.65; color: #cfd6e0;
+  overflow: auto; margin: 0;
+}
+.kw { color: var(--blue); } .str { color: var(--lime); } .num { color: var(--amber); } .com { color: var(--mute); font-style: italic; }
+table { border-collapse: collapse; width: 100%; font-size: 20px; }
+th, td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+th { color: var(--lime); font-family: var(--mono); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+td { color: var(--text); }
+td.dim { color: var(--dim); }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 100px;
+  background: var(--surface3); color: var(--text);
+  font-size: 14px; font-weight: 500; font-family: var(--mono);
+}
+.chip-lime { background: rgba(182,243,108,0.15); color: var(--lime); }
+.chip-amber { background: rgba(242,179,85,0.15); color: var(--amber); }
+.chip-rose { background: rgba(242,118,138,0.15); color: var(--rose); }
+.chip-blue { background: rgba(122,184,255,0.15); color: var(--blue); }
+.flow {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.flow-node {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 20px;
+  font-size: 18px; min-width: 140px; text-align: center;
+}
+.flow-arrow { color: var(--lime); font-size: 24px; font-family: var(--mono); }
+ul { padding-left: 24px; margin: 0; }
+li { margin-bottom: 10px; }
+.kbd {
+  display: inline-block;
+  font-family: var(--mono); font-size: 13px;
+  background: var(--surface3); border: 1px solid var(--borderHi);
+  padding: 2px 8px; border-radius: 4px; color: var(--text);
+}
+</style>
+</head>
+<body>
+<script type="application/json" id="speaker-notes">[]</script>
+<deck-stage>
+
+<!-- ============ SLIDE 1: Cover ============ -->
+<section data-screen-label="01 Cover">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+    <div class="eyebrow">PRODUCT SPEC · v1.0 · 2026.05</div>
+    <h1>자격증 마스터<br/><span style="color:var(--lime)">개발 계획서</span></h1>
+    <p class="lead" style="margin-top:24px; max-width:1100px;">
+      23개 국가기술자격증을 한 앱에서 정복하는 로컬 우선(local-first) 학습 앱.<br/>
+      외부 서버 없이 기기 내에서 모든 학습 기록·알림·복습이 완결됩니다.
+    </p>
+    <div style="display:flex; gap:12px; margin-top:40px;">
+      <span class="chip chip-lime">React Native</span>
+      <span class="chip chip-blue">SQLite (Local DB)</span>
+      <span class="chip chip-amber">Local Notifications</span>
+      <span class="chip">No Backend</span>
+      <span class="chip">No Auth</span>
+    </div>
+  </div>
+  <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+    <div>
+      <div style="font-family:var(--mono); font-size:14px; color:var(--mute); letter-spacing:2px;">CONTENTS</div>
+      <div style="display:flex; gap:36px; margin-top:14px; font-family:var(--mono); font-size:16px; color:var(--dim);">
+        <span>01 개요</span>
+        <span>02 데이터 스키마</span>
+        <span>03 핵심 로직</span>
+        <span>04 화면 플로우</span>
+        <span>05 핸드오프</span>
+      </div>
+    </div>
+    <div style="font-family:var(--mono); font-size:13px; color:var(--mute); letter-spacing:2px;">FOR AI / DEVELOPER HANDOFF</div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2: Vision ============ -->
+<section data-screen-label="02 Vision">
+  <div class="page-tag">01 · OVERVIEW</div>
+  <div class="eyebrow">PRODUCT VISION</div>
+  <h2>비전 — "자격증 365 시리즈를<br/>한 손 안에서 완전히 끝낸다"</h2>
+  <div class="grid-3" style="margin-top:32px;">
+    <div class="card card-lime">
+      <h3 style="color:var(--lime)">🎯 Local-First</h3>
+      <p>회원가입·로그인·서버 의존성 0%. 모든 학습 데이터는 SQLite로 기기에만 저장. 앱 삭제 = 데이터 삭제 (백업 JSON으로 대비).</p>
+    </div>
+    <div class="card card-amber">
+      <h3 style="color:var(--amber)">⚡ 1분 핵심</h3>
+      <p>출퇴근·자투리 시간에 맞춘 1분 스토리형 카드. 8개 카드 = 한 카테고리 완성. 사용자의 학습 진입 장벽을 최소화.</p>
+    </div>
+    <div class="card card-blue">
+      <h3 style="color:var(--blue)">🧠 적응형 복습</h3>
+      <p>오답·자기평가 기반 SM-2 변형 알고리즘으로 다음 복습 시점 자동 결정. 사용자가 스케줄을 짤 필요 없음.</p>
+    </div>
+  </div>
+  <div style="margin-top:48px;">
+    <div class="eyebrow">TARGET USER</div>
+    <p class="lead">
+      국가기술자격증을 단기간(1~3개월)에 합격해야 하는 직장인·취준생.<br/>
+      기존 종이 기출 문제집에 지친, 모바일 네이티브 학습을 원하는 20–40대.
+    </p>
+  </div>
+  <div class="page-num">02 / 17</div>
+</section>
+
+<!-- ============ SLIDE 3: 23 Certs Map ============ -->
+<section data-screen-label="03 Certs">
+  <div class="page-tag">01 · OVERVIEW</div>
+  <div class="eyebrow">CONTENT SCOPE</div>
+  <h2>23개 자격증 · 5개 카테고리 · 약 9,000문항</h2>
+  <div class="grid-3" style="margin-top:24px; flex:1;">
+    <div class="card">
+      <h3 style="color:var(--amber)">건설기계 <span style="font-family:var(--mono); color:var(--mute); font-size:18px;">· 4</span></h3>
+      <p style="font-size:18px;">지게차운전기능사 · 굴착기운전기능사 · 기중기운전기능사 · 로더운전기능사</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--blue)">전기·전자 <span style="font-family:var(--mono); color:var(--mute); font-size:18px;">· 3</span></h3>
+      <p style="font-size:18px;">전기기능사 · 전자기기기능사 · 정보통신기능사</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--lime)">정보·IT <span style="font-family:var(--mono); color:var(--mute); font-size:18px;">· 4</span></h3>
+      <p style="font-size:18px;">정보처리기능사 · 웹디자인기능사 · 컴퓨터그래픽스운용기능사 · 전산응용건축제도기능사</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--rose)">산업·안전 <span style="font-family:var(--mono); color:var(--mute); font-size:18px;">· 5</span></h3>
+      <p style="font-size:18px;">산업안전기사 · 소방설비기사 · 가스기능사 · 위험물기능사 · 환경기능사</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--purple)">조리·서비스 <span style="font-family:var(--mono); color:var(--mute); font-size:18px;">· 7</span></h3>
+      <p style="font-size:18px;">한·일·중식 조리기능사 · 제과제빵기능사 · 이용사 · 미용사 · 화훼장식기능사</p>
+    </div>
+    <div class="card card-lime">
+      <h3 style="color:var(--lime)">데이터 형식</h3>
+      <p style="font-size:18px;">자격증당 ~365문항 JSON 번들 (질문·정답·AI해설 4종·태그·난이도) — 앱 번들 동봉</p>
+    </div>
+  </div>
+  <div class="page-num">03 / 17</div>
+</section>
+
+<!-- ============ SLIDE 4: Features map ============ -->
+<section data-screen-label="04 Features">
+  <div class="page-tag">01 · OVERVIEW</div>
+  <div class="eyebrow">FEATURE MAP</div>
+  <h2>9개 핵심 기능</h2>
+  <div class="grid-4" style="margin-top:24px; flex:1;">
+    <div class="card"><h3>① 전체 기출</h3><p>순차/랜덤 전체 풀이</p></div>
+    <div class="card card-amber"><h3>② 1분 핵심</h3><p>스토리형 8카드 몰아보기</p></div>
+    <div class="card card-blue"><h3>③ 유사 개념</h3><p>태그 기반 묶음 학습</p></div>
+    <div class="card card-rose"><h3>④ 오답·북마크</h3><p>틀린 문제 집중 복습</p></div>
+    <div class="card"><h3>⑤ 난이도별</h3><p>상·중·하 필터링</p></div>
+    <div class="card"><h3>⑥ 모의고사</h3><p>60분 60문항 시간 제한</p></div>
+    <div class="card card-lime"><h3>⑦ 스트릭</h3><p>연속 학습일 추적</p></div>
+    <div class="card card-blue"><h3>⑧ 통계·진도</h3><p>점수 예측·약점 분석</p></div>
+    <div class="card"><h3>⑨ 검색</h3><p>전문 검색 + 하이라이트</p></div>
+  </div>
+  <div class="page-num">04 / 17</div>
+</section>
+
+<!-- ============ SLIDE 5: Tech Stack ============ -->
+<section data-screen-label="05 Stack">
+  <div class="page-tag">01 · OVERVIEW</div>
+  <div class="eyebrow">TECH STACK · 권장</div>
+  <h2>기술 스택</h2>
+  <table style="margin-top:24px;">
+    <thead><tr><th>레이어</th><th>선택지 A (RN)</th><th>선택지 B (Flutter)</th><th>역할</th></tr></thead>
+    <tbody>
+      <tr><td>UI 프레임워크</td><td>React Native 0.74+</td><td>Flutter 3.22+</td><td>크로스플랫폼 UI</td></tr>
+      <tr><td>로컬 DB</td><td>expo-sqlite / WatermelonDB</td><td>drift / sqflite</td><td>구조적 학습 기록 저장</td></tr>
+      <tr><td>키-값 저장</td><td>MMKV / AsyncStorage</td><td>shared_preferences</td><td>설정·토글 상태</td></tr>
+      <tr><td>로컬 알림</td><td>notifee / expo-notifications</td><td>flutter_local_notifications</td><td>학습 리마인더 푸시</td></tr>
+      <tr><td>상태 관리</td><td>Zustand / Jotai</td><td>Riverpod</td><td>UI 상태</td></tr>
+      <tr><td>네비게이션</td><td>expo-router / RN Nav</td><td>go_router</td><td>화면 이동</td></tr>
+      <tr><td>차트</td><td>victory-native</td><td>fl_chart</td><td>통계 시각화</td></tr>
+      <tr><td>파일 입출력</td><td>expo-file-system + sharing</td><td>path_provider + share_plus</td><td>JSON 백업 내보내기</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:32px; font-size:20px;">서버·외부 API 없음. 콘텐츠는 앱 빌드 시 JSON으로 동봉(in-bundle) → 첫 실행 시 SQLite로 시드(seed).</p>
+  <div class="page-num">05 / 17</div>
+</section>
+
+<!-- ============ SLIDE 6: Data — Question ============ -->
+<section data-screen-label="06 Schema-Q">
+  <div class="page-tag">02 · DATA SCHEMA</div>
+  <div class="eyebrow">CONTENT JSON · 입력 형식</div>
+  <h2>문제 데이터 구조</h2>
+  <div class="grid-2" style="flex:1;">
+    <div>
+      <h3 style="margin-bottom:16px;">JSON 스키마 (앱 번들 동봉)</h3>
+<pre><span class="com">// /data/&lt;cert_id&gt;.json — 자격증 1개당 1파일</span>
+{
+  "cert_id": <span class="str">"forklift"</span>,
+  "cert_name": <span class="str">"지게차운전기능사"</span>,
+  "category": <span class="str">"건설기계"</span>,
+  "version": <span class="str">"2026-04-12"</span>,
+  "items": [{
+    "id": <span class="num">2</span>,
+    "question": <span class="str">"지게차의 화물 운반 방법?"</span>,
+    "answer": <span class="str">"마스트를 뒤로 4도..."</span>,
+    "ai_explanation": {
+      "background": <span class="str">"..."</span>,
+      "concept":    <span class="str">"..."</span>,
+      "exam_tip":   <span class="str">"..."</span>,
+      "memory_tip": <span class="str">"..."</span>
+    },
+    "tags": [<span class="str">"주행"</span>, <span class="str">"안전"</span>],
+    "difficulty": <span class="num">1</span>,        <span class="com">// 1=하 2=중 3=상</span>
+    "category": <span class="str">"주행·작동"</span>,
+    "source_log_no": <span class="str">"223739929754"</span>
+  }]
+}</pre>
+    </div>
+    <div>
+      <h3 style="margin-bottom:16px;">필드 명세</h3>
+      <table>
+        <tbody>
+          <tr><td class="mono" style="color:var(--lime)">cert_id</td><td>고유 슬러그 (예: forklift)</td></tr>
+          <tr><td class="mono" style="color:var(--lime)">items[].id</td><td>자격증 내 고유 번호</td></tr>
+          <tr><td class="mono" style="color:var(--lime)">question</td><td>문제 본문 (Markdown 미사용)</td></tr>
+          <tr><td class="mono" style="color:var(--lime)">answer</td><td>정답 본문 (다중 문장 허용)</td></tr>
+          <tr><td class="mono" style="color:var(--lime)">ai_explanation</td><td>4개 섹션 객체 (모두 필수)</td></tr>
+          <tr><td class="mono" style="color:var(--lime)">tags[]</td><td>유사 개념 묶음용</td></tr>
+          <tr><td class="mono" style="color:var(--lime)">difficulty</td><td>1·2·3 (정답률 기반 산정)</td></tr>
+          <tr><td class="mono" style="color:var(--lime)">category</td><td>자격증 내부 카테고리</td></tr>
+          <tr><td class="mono" style="color:var(--lime)">version</td><td>YYYY-MM-DD · 업데이트 비교용</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="page-num">06 / 17</div>
+</section>
+
+<!-- ============ SLIDE 7a: SQLite Schema (콘텐츠) ============ -->
+<section data-screen-label="07 SQLite-A">
+  <div class="page-tag">02 · DATA SCHEMA</div>
+  <div class="eyebrow">LOCAL DB · 콘텐츠 테이블 (시드용)</div>
+  <h2>SQLite 스키마 ① — 콘텐츠</h2>
+  <div class="grid-2" style="flex:1; gap:24px;">
+    <div>
+<pre style="font-size:16px;"><span class="com">-- 1. 자격증 메타 (번들에서 시드)</span>
+<span class="kw">CREATE TABLE</span> certs (
+  cert_id     <span class="kw">TEXT PRIMARY KEY</span>,
+  name        <span class="kw">TEXT NOT NULL</span>,
+  category    <span class="kw">TEXT NOT NULL</span>,
+  total_items <span class="kw">INTEGER NOT NULL</span>,
+  version     <span class="kw">TEXT</span>
+);
+
+<span class="com">-- 2. 문항 (시드 후 사용자 수정 X)</span>
+<span class="kw">CREATE TABLE</span> questions (
+  q_id        <span class="kw">INTEGER PRIMARY KEY AUTOINCREMENT</span>,
+  cert_id     <span class="kw">TEXT REFERENCES</span> certs(cert_id),
+  num         <span class="kw">INTEGER NOT NULL</span>,
+  question    <span class="kw">TEXT NOT NULL</span>,
+  answer      <span class="kw">TEXT NOT NULL</span>,
+  explanation <span class="kw">TEXT NOT NULL</span>,  <span class="com">-- AI해설 JSON</span>
+  tags        <span class="kw">TEXT</span>,           <span class="com">-- 콤마 구분</span>
+  difficulty  <span class="kw">INTEGER DEFAULT</span> <span class="num">1</span>,
+  category    <span class="kw">TEXT</span>,
+  <span class="kw">UNIQUE</span>(cert_id, num)
+);
+<span class="kw">CREATE INDEX</span> idx_q_cert ON questions(cert_id);
+<span class="kw">CREATE INDEX</span> idx_q_tags ON questions(tags);</pre>
+    </div>
+    <div>
+      <h3 style="color:var(--lime)">시드 절차</h3>
+      <ul style="font-size:20px;">
+        <li>첫 실행 시 <span class="mono">/assets/data/*.json</span> 23개 파일 일괄 INSERT</li>
+        <li>트랜잭션 1회로 묶어 1~2초 내 완료</li>
+        <li>이후 앱 시작 시 <span class="mono">version</span> 비교, 신규만 INSERT</li>
+        <li>사용자 학습 데이터(다음 슬라이드)는 <strong style="color:var(--amber)">절대 건드리지 않음</strong></li>
+      </ul>
+      <h3 style="margin-top:24px; color:var(--blue)">FTS5 (검색용)</h3>
+<pre style="font-size:15px;"><span class="kw">CREATE VIRTUAL TABLE</span> q_fts <span class="kw">USING</span> fts5(
+  question, answer, explanation,
+  tokenize=<span class="str">'unicode61 remove_diacritics 2'</span>,
+  content=<span class="str">'questions'</span>, content_rowid=<span class="str">'q_id'</span>
+);</pre>
+    </div>
+  </div>
+  <div class="page-num">07 / 17</div>
+</section>
+
+<!-- ============ SLIDE 7b: SQLite Schema (사용자 데이터) ============ -->
+<section data-screen-label="07 SQLite-B">
+  <div class="page-tag">02 · DATA SCHEMA</div>
+  <div class="eyebrow">LOCAL DB · 사용자 학습 데이터</div>
+  <h2>SQLite 스키마 ② — 학습 기록</h2>
+  <div class="grid-2" style="flex:1; gap:24px;">
+    <div>
+<pre style="font-size:15px;"><span class="com">-- 3. 풀이 기록 (1회=1row, 누적)</span>
+<span class="kw">CREATE TABLE</span> attempts (
+  attempt_id   <span class="kw">INTEGER PRIMARY KEY AUTOINCREMENT</span>,
+  q_id         <span class="kw">INTEGER REFERENCES</span> questions(q_id),
+  grade        <span class="kw">INTEGER NOT NULL</span>,  <span class="com">-- 0다시 1애매 2확실</span>
+  duration_ms  <span class="kw">INTEGER</span>,
+  attempted_at <span class="kw">INTEGER NOT NULL</span>   <span class="com">-- epoch ms</span>
+);
+<span class="kw">CREATE INDEX</span> idx_attempts_q
+  ON attempts(q_id, attempted_at);
+
+<span class="com">-- 4. 질문별 학습 상태 (요약, 빠른 조회)</span>
+<span class="kw">CREATE TABLE</span> q_state (
+  q_id           <span class="kw">INTEGER PRIMARY KEY</span>,
+  bookmarked     <span class="kw">INTEGER DEFAULT</span> <span class="num">0</span>,
+  wrong_count    <span class="kw">INTEGER DEFAULT</span> <span class="num">0</span>,
+  mastery_level  <span class="kw">INTEGER DEFAULT</span> <span class="num">0</span>,
+  next_review_at <span class="kw">INTEGER</span>,
+  last_grade     <span class="kw">INTEGER</span>,
+  ease           <span class="kw">REAL DEFAULT</span> <span class="num">2.5</span>,
+  interval_days  <span class="kw">REAL DEFAULT</span> <span class="num">0</span>
+);</pre>
+    </div>
+    <div>
+<pre style="font-size:15px;"><span class="com">-- 5. 일일 활동 (스트릭·히트맵)</span>
+<span class="kw">CREATE TABLE</span> daily_activity (
+  date_ymd  <span class="kw">TEXT PRIMARY KEY</span>,  <span class="com">-- 'YYYY-MM-DD'</span>
+  count     <span class="kw">INTEGER DEFAULT</span> <span class="num">0</span>,
+  goal_met  <span class="kw">INTEGER DEFAULT</span> <span class="num">0</span>
+);
+
+<span class="com">-- 6. 설정 (key-value)</span>
+<span class="kw">CREATE TABLE</span> settings (
+  k <span class="kw">TEXT PRIMARY KEY</span>,
+  v <span class="kw">TEXT</span>
+);</pre>
+      <div class="card card-lime" style="margin-top:20px;">
+        <h3 style="color:var(--lime)">백업 대상</h3>
+        <p style="font-size:18px;">3·4·5·6번 테이블만 JSON으로 내보냄. 1·2번은 앱 번들에 항상 존재하므로 제외 → 백업 파일 크기 최소화.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">08 / 17</div>
+</section>
+
+<!-- ============ SLIDE 8: Logic — Self Grading ============ -->
+<section data-screen-label="08 Logic-Grade">
+  <div class="page-tag">03 · CORE LOGIC</div>
+  <div class="eyebrow">LOGIC 1 · 자기 평가 → 복습 스케줄</div>
+  <h2>SM-2 변형 복습 알고리즘</h2>
+  <div class="grid-2" style="flex:1;">
+    <div>
+      <p style="margin-bottom:16px;">사용자가 풀이 후 <span class="chip chip-rose">다시</span> <span class="chip chip-amber">애매</span> <span class="chip chip-lime">확실</span> 중 하나 선택. 이 등급(0/1/2)으로 다음 복습 시점을 자동 계산.</p>
+<pre style="font-size:15px;"><span class="com">// scheduleReview(qState, grade) → updated qState</span>
+<span class="kw">function</span> scheduleReview(s, grade) {
+  <span class="kw">const</span> now = Date.now();
+
+  <span class="com">// 1. ease factor 조정 (1.3 ~ 2.8)</span>
+  <span class="kw">let</span> ease = s.ease + (<span class="num">0.1</span> - (<span class="num">2</span>-grade) * <span class="num">0.18</span>);
+  ease = Math.max(<span class="num">1.3</span>, Math.min(<span class="num">2.8</span>, ease));
+
+  <span class="com">// 2. interval 계산 (단위: 일)</span>
+  <span class="kw">let</span> iv;
+  <span class="kw">if</span> (grade === <span class="num">0</span>) {           <span class="com">// 다시 → 10분 후</span>
+    iv = <span class="num">10</span>/<span class="num">1440</span>;
+    s.wrong_count++;
+  } <span class="kw">else if</span> (s.interval_days < <span class="num">1</span>) iv = <span class="num">1</span>;
+  <span class="kw">else if</span> (s.interval_days < <span class="num">3</span>) iv = <span class="num">3</span>;
+  <span class="kw">else</span> iv = Math.round(s.interval_days * ease);
+
+  <span class="com">// 3. mastery_level (3회 연속 '확실' = 완료)</span>
+  <span class="kw">if</span> (grade === <span class="num">2</span> && s.last_grade === <span class="num">2</span>) s.mastery_level = <span class="num">2</span>;
+  <span class="kw">else if</span> (grade > <span class="num">0</span>) s.mastery_level = <span class="num">1</span>;
+  <span class="kw">else</span> s.mastery_level = <span class="num">0</span>;
+
+  <span class="kw">return</span> {
+    ...s, ease, interval_days: iv,
+    last_grade: grade,
+    next_review_at: now + iv * <span class="num">86400000</span>
+  };
+}</pre>
+    </div>
+    <div>
+      <h3>등급별 동작</h3>
+      <table>
+        <thead><tr><th>등급</th><th>다음 노출</th><th>오답카운트</th><th>마스터리</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip chip-rose">0 다시</span></td><td>10분 후</td><td class="dim">+1</td><td class="dim">→ 0</td></tr>
+          <tr><td><span class="chip chip-amber">1 애매</span></td><td>1·3·N일 후</td><td class="dim">유지</td><td class="dim">→ 1</td></tr>
+          <tr><td><span class="chip chip-lime">2 확실</span></td><td>N×ease일 후</td><td class="dim">유지</td><td class="dim">2회연속→2</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:32px;">복습 큐 쿼리</h3>
+<pre style="font-size:16px;"><span class="kw">SELECT</span> q.* <span class="kw">FROM</span> questions q
+  <span class="kw">JOIN</span> q_state s <span class="kw">ON</span> s.q_id=q.q_id
+ <span class="kw">WHERE</span> q.cert_id = ?
+   <span class="kw">AND</span> s.next_review_at &lt;= strftime(<span class="str">'%s'</span>,<span class="str">'now'</span>)*<span class="num">1000</span>
+   <span class="kw">AND</span> s.mastery_level &lt; <span class="num">2</span>
+ <span class="kw">ORDER BY</span> s.next_review_at <span class="kw">ASC</span>
+ <span class="kw">LIMIT</span> ?;</pre>
+    </div>
+  </div>
+  <div class="page-num">09 / 17</div>
+</section>
+
+<!-- ============ SLIDE 9: Logic — Streak ============ -->
+<section data-screen-label="09 Logic-Streak">
+  <div class="page-tag">03 · CORE LOGIC</div>
+  <div class="eyebrow">LOGIC 2 · 스트릭 & 점수 예측</div>
+  <h2>스트릭 판정 + 점수 예측</h2>
+  <div class="grid-2" style="flex:1;">
+    <div>
+      <h3>스트릭 (연속 학습일)</h3>
+      <p>매 풀이 시 <span class="mono" style="color:var(--lime)">daily_activity</span>의 오늘 row를 upsert. 일일 목표(기본 20문항) 달성 시 <span class="mono">goal_met=1</span>.</p>
+<pre><span class="com">// 매일 자정에 호출 또는 앱 진입 시 lazy 계산</span>
+<span class="kw">function</span> computeStreak() {
+  <span class="kw">let</span> streak = <span class="num">0</span>;
+  <span class="kw">const</span> today = ymd(<span class="kw">new</span> Date());
+  <span class="kw">for</span> (<span class="kw">let</span> d = <span class="num">0</span>; d < <span class="num">365</span>; d++) {
+    <span class="kw">const</span> day = ymd(addDays(<span class="kw">new</span> Date(), -d));
+    <span class="kw">const</span> row = db.get(<span class="str">"SELECT * FROM daily_activity WHERE date_ymd=?"</span>, day);
+    <span class="kw">if</span> (row?.goal_met) streak++;
+    <span class="kw">else if</span> (d === <span class="num">0</span>) <span class="kw">continue</span>;  <span class="com">// 오늘은 미달성이어도 어제까지로</span>
+    <span class="kw">else</span> <span class="kw">break</span>;
+  }
+  <span class="kw">return</span> streak;
+}</pre>
+    </div>
+    <div>
+      <h3>점수 예측 (실제 시험 60문항 기준)</h3>
+<pre><span class="com">// 카테고리별 정답률 가중평균 → 100점 환산</span>
+<span class="kw">function</span> predictScore(certId) {
+  <span class="kw">const</span> rows = db.all(`
+    SELECT q.category,
+           COUNT(*) c,
+           SUM(CASE WHEN a.grade=2 THEN 1 ELSE 0 END) ok
+    FROM attempts a
+    JOIN questions q USING(q_id)
+    WHERE q.cert_id=?
+      AND a.attempted_at &gt; ? <span class="com">/* 최근 30일 */</span>
+    GROUP BY q.category
+  `, certId, Date.now() - <span class="num">30</span>*<span class="num">86400000</span>);
+
+  <span class="kw">if</span> (!rows.length) <span class="kw">return null</span>;
+  <span class="kw">const</span> wAvg = rows.reduce((s,r) => s + (r.ok/r.c), <span class="num">0</span>) / rows.length;
+  <span class="kw">return</span> Math.round(wAvg * <span class="num">100</span>);
+}</pre>
+      <p style="margin-top:16px;"><span class="chip chip-lime">합격권 ≥ 60</span> 60점 이상 시 "합격권" 배지 표시. 일주일 단위 변화량 표기.</p>
+    </div>
+  </div>
+  <div class="page-num">10 / 17</div>
+</section>
+
+<!-- ============ SLIDE 10: Logic — Local Push ============ -->
+<section data-screen-label="10 Logic-Push">
+  <div class="page-tag">03 · CORE LOGIC</div>
+  <div class="eyebrow">LOGIC 3 · 로컬 알림 (서버 없음)</div>
+  <h2>로컬 푸시 알림 — OS 스케줄러 직접 활용</h2>
+  <div class="grid-2" style="flex:1;">
+    <div>
+      <h3>핵심 원리</h3>
+      <p>FCM/APNs <span style="color:var(--rose); font-weight:600;">불필요</span>. 앱이 OS 스케줄러에 트리거를 등록하고, 시간이 되면 OS가 알아서 알림을 표시. 백그라운드·앱 종료 상태에서도 동작.</p>
+      <h3 style="margin-top:24px;">알림 종류</h3>
+      <table>
+        <tbody>
+          <tr><td>📅 매일 리마인더</td><td class="dim">설정한 시간 (기본 21:00)</td></tr>
+          <tr><td>🔄 복습 알림</td><td class="dim">3일 미접속 시 1회</td></tr>
+          <tr><td>🎯 목표 임박</td><td class="dim">하루 끝나기 1시간 전 미달 시</td></tr>
+          <tr><td>🔥 스트릭 위험</td><td class="dim">오늘 미접속 + 스트릭 7일↑</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>구현 (React Native + notifee)</h3>
+<pre><span class="kw">import</span> notifee, { TriggerType, RepeatFrequency } <span class="kw">from</span> <span class="str">'@notifee/react-native'</span>;
+
+<span class="com">// 매일 21:00 리마인더 등록</span>
+<span class="kw">async function</span> scheduleDailyReminder(hour, minute) {
+  <span class="kw">await</span> notifee.cancelTriggerNotification(<span class="str">'daily-reminder'</span>);
+
+  <span class="kw">const</span> trigger = {
+    type: TriggerType.TIMESTAMP,
+    timestamp: nextOccurrence(hour, minute).getTime(),
+    repeatFrequency: RepeatFrequency.DAILY
+  };
+
+  <span class="kw">await</span> notifee.createTriggerNotification({
+    id: <span class="str">'daily-reminder'</span>,
+    title: <span class="str">'📚 오늘 학습 시간이에요'</span>,
+    body: <span class="str">`스트릭 ${getStreak()}일째 — 5분만 시작해볼까요?`</span>,
+    android: { channelId: <span class="str">'reminder'</span>, smallIcon: <span class="str">'ic_stat'</span> },
+    ios: { sound: <span class="str">'default'</span> }
+  }, trigger);
+}
+
+<span class="com">// 사용자 설정 변경 시 즉시 재등록</span>
+settings.on(<span class="str">'reminderTime'</span>, scheduleDailyReminder);</pre>
+      <p style="margin-top:14px; font-size:18px;"><span class="chip chip-blue">서버 0%</span> <span class="chip chip-blue">권한 요청 1회</span> <span class="chip chip-blue">배터리 영향 미미</span></p>
+    </div>
+  </div>
+  <div class="page-num">11 / 17</div>
+</section>
+
+<!-- ============ SLIDE 11: Logic — Backup ============ -->
+<section data-screen-label="11 Logic-Backup">
+  <div class="page-tag">03 · CORE LOGIC</div>
+  <div class="eyebrow">LOGIC 4 · 백업 / 복원</div>
+  <h2>JSON 백업 — 앱 삭제 대비</h2>
+  <div class="grid-2" style="flex:1;">
+    <div>
+      <h3>백업 파일 스키마</h3>
+<pre><span class="com">// cert-master-backup-2026-05-02.json</span>
+{
+  <span class="str">"app"</span>: <span class="str">"cert-master"</span>,
+  <span class="str">"version"</span>: <span class="str">"1.0.0"</span>,
+  <span class="str">"exported_at"</span>: <span class="num">1746201600000</span>,
+  <span class="str">"data"</span>: {
+    <span class="str">"attempts"</span>: [...],         <span class="com">// attempts 전체</span>
+    <span class="str">"q_state"</span>: [...],          <span class="com">// 학습 상태 전체</span>
+    <span class="str">"daily_activity"</span>: [...],   <span class="com">// 일일 기록</span>
+    <span class="str">"settings"</span>: {...}          <span class="com">// k-v 설정</span>
+  }
+}</pre>
+      <p style="margin-top:16px;">questions 테이블은 백업하지 <strong style="color:var(--lime)">않음</strong> (앱 번들에 항상 존재). 사용자 학습 기록만 보관.</p>
+    </div>
+    <div>
+      <h3>내보내기 / 불러오기</h3>
+<pre style="font-size:15px;"><span class="kw">async function</span> exportBackup() {
+  <span class="kw">const</span> data = {
+    attempts: <span class="kw">await</span> db.all(<span class="str">'SELECT * FROM attempts'</span>),
+    q_state:  <span class="kw">await</span> db.all(<span class="str">'SELECT * FROM q_state'</span>),
+    daily_activity: <span class="kw">await</span> db.all(<span class="str">'SELECT * FROM daily_activity'</span>),
+    settings: <span class="kw">await</span> readAllSettings()
+  };
+  <span class="kw">const</span> blob = JSON.stringify({
+    app:<span class="str">'cert-master'</span>, version:APP_VER,
+    exported_at: Date.now(), data
+  });
+  <span class="kw">const</span> path = `${FileSystem.documentDirectory}backup-${ymd()}.json`;
+  <span class="kw">await</span> FileSystem.writeAsStringAsync(path, blob);
+  <span class="kw">await</span> Sharing.shareAsync(path);
+}
+
+<span class="kw">async function</span> importBackup(file) {
+  <span class="kw">const</span> obj = JSON.parse(<span class="kw">await</span> readFile(file));
+  <span class="kw">if</span> (obj.app !== <span class="str">'cert-master'</span>) <span class="kw">throw</span> Error(<span class="str">'invalid'</span>);
+  <span class="kw">await</span> db.transaction(() => {
+    db.exec(<span class="str">'DELETE FROM attempts'</span>);
+    obj.data.attempts.forEach(a => db.run(<span class="str">'INSERT INTO attempts VALUES (...)'</span>, a));
+    <span class="com">/* ... 동일하게 q_state, daily_activity, settings */</span>
+  });
+}</pre>
+    </div>
+  </div>
+  <div class="page-num">12 / 17</div>
+</section>
+
+<!-- ============ SLIDE 12: Logic — Search & Tags ============ -->
+<section data-screen-label="12 Logic-Search">
+  <div class="page-tag">03 · CORE LOGIC</div>
+  <div class="eyebrow">LOGIC 5 · 검색 & 유사 개념</div>
+  <h2>전문 검색 + 태그 묶음</h2>
+  <div class="grid-2" style="flex:1;">
+    <div>
+      <h3>SQLite FTS5 인덱스</h3>
+<pre><span class="kw">CREATE VIRTUAL TABLE</span> q_fts <span class="kw">USING</span> fts5(
+  question, answer, explanation,
+  tokenize=<span class="str">'unicode61 remove_diacritics 2'</span>
+);
+
+<span class="com">-- 시드 시</span>
+<span class="kw">INSERT INTO</span> q_fts(rowid, question, answer, explanation)
+  <span class="kw">SELECT</span> q_id, question, answer, explanation <span class="kw">FROM</span> questions;
+
+<span class="com">-- 검색 (한글 부분 일치 + 하이라이트)</span>
+<span class="kw">SELECT</span> q.q_id, q.cert_id,
+       highlight(q_fts, <span class="num">0</span>, <span class="str">'&lt;b&gt;'</span>, <span class="str">'&lt;/b&gt;'</span>) <span class="kw">AS</span> hl
+  <span class="kw">FROM</span> q_fts <span class="kw">JOIN</span> questions q <span class="kw">ON</span> q_fts.rowid=q.q_id
+ <span class="kw">WHERE</span> q_fts <span class="kw">MATCH</span> ?
+ <span class="kw">LIMIT</span> <span class="num">50</span>;</pre>
+    </div>
+    <div>
+      <h3>유사 개념 묶음 (Related)</h3>
+      <p>현재 문제의 태그 교집합으로 같은 자격증 내 유사 문제 정렬.</p>
+<pre><span class="kw">function</span> findRelated(qId, k=<span class="num">5</span>) {
+  <span class="kw">const</span> q = db.get(<span class="str">'SELECT * FROM questions WHERE q_id=?'</span>, qId);
+  <span class="kw">const</span> tags = q.tags.split(<span class="str">','</span>);
+  <span class="kw">return</span> db.all(`
+    SELECT q.*, (
+      ${tags.map(()=><span class="str">"(',' || q.tags || ',') LIKE ?"</span>).join(<span class="str">' + '</span>)}
+    ) AS overlap
+    FROM questions q
+    WHERE q.cert_id = ?
+      AND q.q_id != ?
+    ORDER BY overlap DESC, RANDOM()
+    LIMIT ?
+  `, ...tags.map(t=>`%,${t},%`), q.cert_id, qId, k);
+}</pre>
+      <p style="margin-top:16px;">상위 결과로 "유사 개념 5문항" 카드 구성. 1분 핵심 카드도 동일 로직으로 8개 묶음 자동 생성 가능.</p>
+    </div>
+  </div>
+  <div class="page-num">13 / 17</div>
+</section>
+
+<!-- ============ SLIDE 13: Screen Flow ============ -->
+<section data-screen-label="13 Flow">
+  <div class="page-tag">04 · SCREEN FLOW</div>
+  <div class="eyebrow">화면 이동 다이어그램</div>
+  <h2>화면 플로우</h2>
+  <div style="flex:1; display:flex; flex-direction:column; gap:32px; margin-top:24px;">
+    <div>
+      <div class="eyebrow" style="font-size:13px;">FLOW A · 신규 학습</div>
+      <div class="flow">
+        <div class="flow-node" style="background:rgba(182,243,108,0.15); border-color:var(--lime);">홈</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">자격증 상세</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">전체 기출 / 1분 핵심</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node" style="background:rgba(122,184,255,0.15); border-color:var(--blue);">문제 풀이 (탭 전)</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">정답 펼침 + 해설</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">자기평가 ◐◑●</div>
+        <span class="flow-arrow">↻</span>
+        <div class="flow-node" style="background:rgba(122,184,255,0.15); border-color:var(--blue);">다음 문제</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="eyebrow" style="font-size:13px;">FLOW B · 복습</div>
+      <div class="flow">
+        <div class="flow-node">로컬 푸시 21:00</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">앱 진입</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">자격증 상세</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node" style="background:rgba(242,118,138,0.15); border-color:var(--rose);">오답·북마크</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">필터 (오답/북마크/모름)</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">문제 풀이 + 자기평가</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">스트릭 +1</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="eyebrow" style="font-size:13px;">FLOW C · 데이터 백업</div>
+      <div class="flow">
+        <div class="flow-node">설정</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node" style="background:rgba(182,243,108,0.15); border-color:var(--lime);">학습 기록 내보내기</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">JSON 생성</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">OS 공유 시트</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Drive·iCloud·메일</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="eyebrow" style="font-size:13px;">FLOW D · 검색</div>
+      <div class="flow">
+        <div class="flow-node">홈 검색바</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">검색어 입력</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">FTS5 쿼리 (디바운스 200ms)</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">결과 + 하이라이트</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">문제 풀이 진입</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">14 / 17</div>
+</section>
+
+<!-- ============ SLIDE 14: State Machine ============ -->
+<section data-screen-label="14 State">
+  <div class="page-tag">04 · SCREEN FLOW</div>
+  <div class="eyebrow">학습 상태 머신</div>
+  <h2>문항 상태 라이프사이클</h2>
+  <div style="flex:1; display:flex; align-items:center; justify-content:center; gap:32px;">
+    <div style="display:flex; flex-direction:column; gap:24px; align-items:center;">
+      <div class="card" style="min-width:240px; text-align:center;">
+        <h3>① 신규 NEW</h3>
+        <p style="font-size:18px;">아직 풀지 않음</p>
+        <span class="chip">mastery=0</span>
+      </div>
+      <div class="flow-arrow" style="font-size:40px;">↓</div>
+      <div class="card card-amber" style="min-width:240px; text-align:center;">
+        <h3 style="color:var(--amber)">② 학습중 LEARNING</h3>
+        <p style="font-size:18px;">1회 이상 시도</p>
+        <span class="chip chip-amber">mastery=1</span>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:18px; flex:1; max-width:600px;">
+      <div class="card card-rose">
+        <h3 style="color:var(--rose)">→ 등급 0 (다시)</h3>
+        <p>10분 후 재출제 · 오답 카운트 증가 · 오답노트 자동 추가</p>
+      </div>
+      <div class="card card-amber">
+        <h3 style="color:var(--amber)">→ 등급 1 (애매)</h3>
+        <p>1일 후 재출제 · 다음엔 3일 · ease factor 약간 감소</p>
+      </div>
+      <div class="card card-lime">
+        <h3 style="color:var(--lime)">→ 등급 2 (확실)</h3>
+        <p>interval × ease 일 후 재출제 · 2회 연속 시 완료(③)</p>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:24px; align-items:center;">
+      <div style="height:48px;"></div>
+      <div class="card card-lime" style="min-width:240px; text-align:center;">
+        <h3 style="color:var(--lime)">③ 완료 MASTERED</h3>
+        <p style="font-size:18px;">2회 연속 '확실'</p>
+        <span class="chip chip-lime">mastery=2</span>
+      </div>
+      <div class="flow-arrow" style="font-size:40px;">↓ 30일 후</div>
+      <div class="card" style="min-width:240px; text-align:center;">
+        <h3>④ 재시험 RECHECK</h3>
+        <p style="font-size:18px;">자동 큐 재진입</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">15 / 17</div>
+</section>
+
+<!-- ============ SLIDE 15: Edge Cases ============ -->
+<section data-screen-label="15 Edge">
+  <div class="page-tag">04 · SCREEN FLOW</div>
+  <div class="eyebrow">EDGE CASES · 빈 상태 / 에러</div>
+  <h2>엣지 케이스 처리</h2>
+  <div class="grid-2" style="flex:1; gap:20px;">
+    <div class="card">
+      <h3 style="color:var(--blue)">🆕 첫 실행</h3>
+      <p>SQLite 미생성 → 마이그레이션 실행 → /assets/data/*.json 시드 → 홈 화면 (모든 자격증 0% 진도)</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--blue)">📭 빈 상태</h3>
+      <p>오답노트 0개 → "아직 오답이 없어요. 오답이 생기면 자동으로 모입니다" 일러스트 + 학습 시작 CTA</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--amber)">📦 데이터 업데이트</h3>
+      <p>앱 시작 시 /assets/data version 비교 → 신규 문항만 INSERT, 기존 사용자 기록 보존</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--amber)">🔋 백그라운드 진입</h3>
+      <p>풀이 중 앱 백그라운드 → 현재 위치(cert/q_id/mode) AsyncStorage 저장 → 재진입 시 복원</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--rose)">⚠ 백업 파일 손상</h3>
+      <p>JSON 파싱 실패 / 스키마 미스매치 → 트랜잭션 롤백 → 사용자에게 명확한 에러 메시지 + 기존 데이터 유지</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--rose)">🔕 알림 권한 거부</h3>
+      <p>OS 권한 X → 설정에서 토글 자동 비활성화 + "권한 설정 열기" 딥링크 표시</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--purple)">🌙 OS 테마 변경</h3>
+      <p>theme=auto일 때 prefers-color-scheme 변화 감지 → 즉시 토큰 재적용 (앱 재시작 불필요)</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--purple)">📅 자정 경계</h3>
+      <p>23:59 풀이 → 00:01 풀이 = 다른 날짜로 카운트. 디바이스 로컬 타임존 기준 ymd() 사용.</p>
+    </div>
+  </div>
+  <div class="page-num">16 / 17</div>
+</section>
+
+<!-- ============ SLIDE 16: Handoff ============ -->
+<section data-screen-label="16 Handoff">
+  <div class="page-tag">05 · HANDOFF</div>
+  <div class="eyebrow">FOR AI / DEV TEAM</div>
+  <h2>AI에게 던질 때 — 이 덱과 함께 주세요</h2>
+  <div class="grid-2" style="flex:1; gap:24px;">
+    <div>
+      <h3 style="color:var(--lime)">📦 패키지 구성</h3>
+      <ul style="font-size:20px;">
+        <li>본 덱 PDF (PRD + 스키마 + 로직 + 플로우)</li>
+        <li>디자인 캔버스 HTML (10개 화면)</li>
+        <li>자격증 데이터 JSON 샘플 (실제 1개 자격증 분량)</li>
+        <li>개별 화면 PNG (선택)</li>
+      </ul>
+
+      <h3 style="margin-top:32px; color:var(--amber)">💬 AI 프롬프트 예시</h3>
+<pre style="font-size:16px;"><span class="com">"첨부한 PRD와 디자인을 바탕으로
+React Native + Expo + SQLite로
+자격증 마스터 앱을 구현해줘.
+
+먼저 다음 순서로 작업:
+1. /db/schema.sql 작성
+2. /db/migrations.ts (시드 포함)
+3. /lib/scheduling.ts (SM-2)
+4. 화면별 컴포넌트 (홈→상세→풀이→해설)
+5. 로컬 알림 등록 모듈
+6. 백업/복원 모듈
+
+각 단계마다 단위 테스트 포함."</span></pre>
+    </div>
+    <div>
+      <h3 style="color:var(--blue)">✅ 우선순위 (MVP)</h3>
+      <table>
+        <thead><tr><th>P0 · 1주차</th><th>P1 · 2주차</th><th>P2 · 3주차</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>홈 + 상세<br/>문제 풀이<br/>정답·해설<br/>SQLite 시드</td>
+            <td>오답노트<br/>북마크<br/>SM-2 복습 큐<br/>스트릭</td>
+            <td>1분 핵심<br/>유사 개념<br/>모의고사<br/>통계·예측</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:24px; color:var(--rose)">⚠ 빠뜨리지 말 것</h3>
+      <ul style="font-size:18px;">
+        <li>모든 학습 데이터는 <strong>로컬에만</strong>, 외부 전송 X</li>
+        <li>회원가입·로그인 화면 만들지 말 것</li>
+        <li>로컬 알림 권한은 <strong>첫 학습 후</strong> 요청 (첫 진입 X)</li>
+        <li>백업·복원 동작 반드시 트랜잭션 처리</li>
+        <li>키보드·접근성·다크모드 자동 전환 테스트</li>
+      </ul>
+
+      <div style="margin-top:32px; padding:16px 20px; background:rgba(182,243,108,0.1); border:1px solid var(--lime); border-radius:12px;">
+        <span class="mono" style="color:var(--lime); font-weight:600;">✓ READY TO HANDOFF</span>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">17 / 17</div>
+</section>
+
+</deck-stage>
+</body>
+</html>

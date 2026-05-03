@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<title>자격증 마스터 — 디자인 캔버스</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; }
+  * { box-sizing: border-box; word-break: keep-all; overflow-wrap: break-word; }
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tokens.jsx"></script>
+<script type="text/babel" src="phone.jsx"></script>
+<script type="text/babel" src="screens-1.jsx"></script>
+<script type="text/babel" src="screens-2.jsx"></script>
+<script type="text/babel" src="screens-3.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const TWEAKS_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "homeLayout": "list",
+  "fontScale": 1.1,
+  "accent": "lime",
+  "showAllRevealed": true,
+  "theme": "dark"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [tw, setTweak] = useTweaks(TWEAKS_DEFAULTS);
+  const [, force] = React.useReducer(x => x + 1, 0);
+
+  // Apply font scale globally
+  React.useEffect(() => {
+    document.documentElement.style.fontSize = `${16 * tw.fontScale}px`;
+  }, [tw.fontScale]);
+
+  // Theme: dark / light / auto (system)
+  React.useEffect(() => {
+    window.applyTheme(tw.theme);
+    force();
+    if (tw.theme === 'auto' && window.matchMedia) {
+      const mql = window.matchMedia('(prefers-color-scheme: light)');
+      const onChange = () => { window.applyTheme('auto'); force(); };
+      mql.addEventListener('change', onChange);
+      return () => mql.removeEventListener('change', onChange);
+    }
+  }, [tw.theme]);
+
+  // Override accent color (preserved across theme swaps)
+  React.useEffect(() => {
+    const accents = { lime:'#B6F36C', blue:'#7AB8FF', amber:'#F2B355', rose:'#F2768A' };
+    const accentsLight = { lime:'#5DA02A', blue:'#2D7CD6', amber:'#C77A1B', rose:'#D4475F' };
+    window.T.lime = (window.T._mode === 'light' ? accentsLight : accents)[tw.accent] || accents.lime;
+    force();
+  }, [tw.accent, tw.theme]);
+
+  return (
+    <>
+      <DesignCanvas>
+        <DCSection id="overview" title="자격증 마스터 — 학습 앱" subtitle="23개 자격증을 한 앱에서 · 다크 모드 · Android · 9개 화면">
+          <DCArtboard id="home"      label="01 · 홈 (자격증 목록)"        width={360} height={780}>
+            <HomeScreen layout={tw.homeLayout} />
+          </DCArtboard>
+          <DCArtboard id="detail"    label="02 · 자격증 상세 (기능 허브)"   width={360} height={780}>
+            <CertDetailScreen />
+          </DCArtboard>
+          <DCArtboard id="quiz"      label="03 · 문제 풀이 (탭 전)"         width={360} height={780}>
+            <QuizScreen revealed={false} />
+          </DCArtboard>
+          <DCArtboard id="quiz_open" label="04 · 문제 풀이 (정답 펼침)"     width={360} height={780}>
+            <QuizScreen revealed={true} />
+          </DCArtboard>
+          <DCArtboard id="ai"        label="05 · AI 해설 전체보기"         width={360} height={780}>
+            <ExplanationScreen />
+          </DCArtboard>
+          <DCArtboard id="onemin"    label="06 · 1분 핵심 몰아보기"         width={360} height={780}>
+            <OneMinuteScreen />
+          </DCArtboard>
+          <DCArtboard id="note"      label="07 · 오답노트·북마크"           width={360} height={780}>
+            <NotebookScreen />
+          </DCArtboard>
+          <DCArtboard id="stats"     label="08 · 학습 통계·진도"           width={360} height={780}>
+            <StatsScreen />
+          </DCArtboard>
+          <DCArtboard id="search"    label="09 · 검색"                    width={360} height={780}>
+            <SearchScreen />
+          </DCArtboard>
+          <DCArtboard id="settings"  label="10 · 설정 (로컬 데이터·알림)"     width={360} height={780}>
+            <SettingsScreen />
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+
+      <TweaksPanel title="자격증 마스터 — Tweaks">
+        <TweakSection title="테마">
+          <TweakRadio
+            label="모드"
+            value={tw.theme}
+            options={[
+              { value: 'dark',  label: '다크' },
+              { value: 'light', label: '라이트' },
+              { value: 'auto',  label: '시스템' },
+            ]}
+            onChange={(v) => setTweak('theme', v)}
+          />
+        </TweakSection>
+        <TweakSection title="화면">
+          <TweakRadio
+            label="홈 레이아웃"
+            value={tw.homeLayout}
+            options={[
+              { value: 'list', label: '리스트' },
+              { value: 'grid', label: '그리드' },
+            ]}
+            onChange={(v) => setTweak('homeLayout', v)}
+          />
+        </TweakSection>
+        <TweakSection title="가독성">
+          <TweakSlider
+            label="폰트 크기"
+            value={tw.fontScale}
+            min={0.85} max={1.2} step={0.05}
+            onChange={(v) => setTweak('fontScale', v)}
+            format={(v) => `${Math.round(v*100)}%`}
+          />
+        </TweakSection>
+        <TweakSection title="액센트 컬러">
+          <TweakRadio
+            label="포인트 색"
+            value={tw.accent}
+            options={[
+              { value: 'lime',  label: '라임' },
+              { value: 'blue',  label: '블루' },
+              { value: 'amber', label: '앰버' },
+              { value: 'rose',  label: '로즈' },
+            ]}
+            onChange={(v) => setTweak('accent', v)}
+          />
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
