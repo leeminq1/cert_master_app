@@ -78,9 +78,15 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/mock-exam/:certId/result',
-      builder: (_, state) => MockExamResultScreen(
-        certId: state.pathParameters['certId']!,
-      ),
+      builder: (_, state) {
+        final extra = state.extra as Map<String, dynamic>? ?? {};
+        return MockExamResultScreen(
+          certId: state.pathParameters['certId']!,
+          correct: extra['correct'] as int? ?? 0,
+          total: extra['total'] as int? ?? 0,
+          elapsedSeconds: extra['elapsed'] as int? ?? 0,
+        );
+      },
     ),
   ],
 );

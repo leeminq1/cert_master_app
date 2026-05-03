@@ -8,15 +8,29 @@
 
 ---
 
+## ⚠️ 기획 변경 사항 (디자인 대비 코드 최종 결정)
+
+> 원래 design_handoff 기준 CertDetailScreen에 6개 모드 카드가 있었으나,
+> 데이터 현실(tags 전부 비어있음, difficulty 전부 1)로 인해 아래 2개 기능을 **영구 제거**함.
+
+| 항목 | 원래 design_handoff | 코드 최종 결정 | 이유 |
+|------|-------------------|-----------|----|
+| 유사 개념 카드 | 있음 (tags 기반 그룹핑) | **제거** | `tags` 필드가 23개 과목 전부 `[]` — 데이터 없이 구현 불가 |
+| 난이도별 카드 | 있음 (difficulty 필터) | **제거** | `difficulty` 필드가 전부 `1` — 의미 있는 필터링 불가 |
+
+**결과**: CertDetailScreen 모드 카드 6개 → 4개 (전체학습 / 1분핵심 / 오답·북마크 / 모의고사)
+
+---
+
 ## 현재 stub 상태 화면 (P2 구현 대상)
 
 | 화면 | 라우트 | 현재 상태 |
 |---|---|---|
-| OneMinCoreScreen | `/cert/:certId/one-min` | ❌ "P2에서 구현" placeholder |
+| OneMinCoreScreen | `/cert/:certId/one-min` | ✅ 구현 완료 (2026-05-03) |
+| MockExamSetupScreen | `/mock-exam/:certId` | ✅ 구현 완료 (2026-05-03) |
+| MockExamActiveScreen | `/mock-exam/:certId/active` | ✅ 구현 완료 (2026-05-03) |
+| MockExamResultScreen | `/mock-exam/:certId/result` | ✅ 구현 완료 (2026-05-03) |
 | StatsScreen | `/stats` | ❌ "P2에서 구현" placeholder |
-| MockExamSetupScreen | `/mock-exam/:certId` | ❌ "P2에서 구현" placeholder |
-| MockExamActiveScreen | `/mock-exam/:certId/active` | ❌ "P2에서 구현" placeholder |
-| MockExamResultScreen | `/mock-exam/:certId/result` | ❌ "P2에서 구현" placeholder |
 
 ## 부분 구현 (P2에서 고도화)
 

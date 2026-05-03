@@ -123,25 +123,11 @@ class CertDetailScreen extends ConsumerWidget {
                       onTap: () => context.push('/cert/$certId/one-min'),
                     ),
                     _ModeCard(
-                      icon: Icons.link_outlined,
-                      title: '유사 개념',
-                      subtitle: '준비 중',
-                      onTap: null,
-                      dimmed: true,
-                    ),
-                    _ModeCard(
                       icon: Icons.bookmark_border_outlined,
                       title: '오답·북마크',
                       subtitle: '복습',
                       onTap: () =>
                           context.push('/cert/$certId/wrong-note'),
-                    ),
-                    _ModeCard(
-                      icon: Icons.signal_cellular_alt_outlined,
-                      title: '난이도별',
-                      subtitle: '준비 중',
-                      onTap: null,
-                      dimmed: true,
                     ),
                     _ModeCard(
                       icon: Icons.assignment_outlined,
@@ -172,14 +158,12 @@ class _ModeCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback? onTap;
-  final bool dimmed;
 
   const _ModeCard({
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.onTap,
-    this.dimmed = false,
   });
 
   @override
@@ -193,9 +177,7 @@ class _ModeCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Opacity(
-        opacity: dimmed ? 0.4 : 1.0,
-        child: Container(
+      child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: surface,
@@ -230,7 +212,6 @@ class _ModeCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
