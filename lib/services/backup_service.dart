@@ -1,8 +1,8 @@
 import 'dart:convert';
+import 'package:drift/drift.dart' show Value;
 import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import '../data/database/app_database.dart';
-import 'package:drift/drift.dart';
 
 class BackupService {
   static Future<void> export(AppDatabase db) async {
@@ -49,11 +49,10 @@ class BackupService {
     final jsonStr = jsonEncode(data);
     final file = XFile.fromData(
       utf8.encode(jsonStr),
-      name:
-          'cert_master_backup_${DateTime.now().millisecondsSinceEpoch}.json',
+      name: 'cert_master_backup_${DateTime.now().millisecondsSinceEpoch}.json',
       mimeType: 'application/json',
     );
-    await Share.shareXFiles([file]);
+    await SharePlus.instance.share(ShareParams(files: [file]));
   }
 
   /// Returns null on success, error message on failure.
@@ -75,23 +74,24 @@ class BackupService {
 
         for (final r in (data['q_states'] as List)) {
           final m = r as Map<String, dynamic>;
-          await db.into(db.qStates).insertOnConflictUpdate(QStatesCompanion.insert(
+          await db.into(db.qStates).insertOnConflictUpdate(QState(
             questionId: m['question_id'] as int,
             certId: m['cert_id'] as String,
-            easeFactor: Value(m['ease_factor'] as double),
-            interval: Value(m['interval'] as int),
-            repetitions: Value(m['repetitions'] as int),
-            nextReview: Value(m['next_review'] != null
+            easeFactor: (m['ease_factor'] as num).toDouble(),
+            interval: m['interval'] as int,
+            repetitions: m['repetitions'] as int,
+            nextReview: m['next_review'] != null
                 ? DateTime.parse(m['next_review'] as String)
-                : null),
-            masteryLevel: Value(m['mastery_level'] as int),
-            bookmarked: Value(m['bookmarked'] as bool),
+                : null,
+            masteryLevel: m['mastery_level'] as int,
+            bookmarked: m['bookmarked'] as bool,
           ));
         }
 
         for (final r in (data['attempts'] as List)) {
           final m = r as Map<String, dynamic>;
-          await db.into(db.attempts).insert(AttemptsCompanion.insert(
+          await db.into(db.attempts).insertOnConflictUpdate(Attempt(
+            id: m['id'] as int,
             questionId: m['question_id'] as int,
             certId: m['cert_id'] as String,
             grade: m['grade'] as int,
