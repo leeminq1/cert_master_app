@@ -21,7 +21,47 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) async {
+      await m.createAll();
+      await _createFts5();
+    },
+    onUpgrade: (m, from, to) async {
+      if (from < 2) await _createFts5();
+    },
+  );
+
+  Future<void> _createFts5() async {
+    await customStatement(
+      "CREATE VIRTUAL TABLE IF NOT EXISTS q_fts USING fts5("
+      "question, answer, content='questions', content_rowid='rowid')",
+    );
+    await customStatement("INSERT INTO q_fts(q_fts) VALUES ('rebuild')");
+  }
+
+  Future<void> deleteAllUserData() async {
+    await delete(qStates).go();
+    await delete(attempts).go();
+    await delete(dailyActivities).go();
+    await (delete(settings)
+          ..where((s) => s.key.isNotIn([
+                'theme_mode',
+                'notification_enabled',
+                'daily_hour',
+                'daily_minute',
+                'daily_enabled',
+              ])))
+        .go();
+  }
+
+  Future<void> deleteUserDataForCert(String certId) async {
+    await (delete(qStates)..where((q) => q.certId.equals(certId))).go();
+    await (delete(attempts)..where((a) => a.certId.equals(certId))).go();
+    await (delete(dailyActivities)..where((d) => d.certId.equals(certId))).go();
+  }
 
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {

@@ -42,4 +42,19 @@ class DailyActivityDao extends DatabaseAccessor<AppDatabase>
       for (final r in result) r.read<String>('date'): r.read<int>('total')
     };
   }
+
+  Future<Map<String, (int correct, int total)>> getAccuracyByCert() async {
+    final result = await customSelect(
+      'SELECT cert_id, SUM(correct_count) as correct, SUM("count") as total '
+      'FROM daily_activities GROUP BY cert_id',
+      readsFrom: {dailyActivities},
+    ).get();
+    return {
+      for (final r in result)
+        r.read<String>('cert_id'): (
+          r.read<int>('correct'),
+          r.read<int>('total'),
+        ),
+    };
+  }
 }

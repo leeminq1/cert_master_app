@@ -45,4 +45,12 @@ class QStateDao extends DatabaseAccessor<AppDatabase> with _$QStateDaoMixin {
             ..where(
                 (t) => t.questionId.equals(questionId) & t.certId.equals(certId)))
           .write(QStatesCompanion(bookmarked: Value(value)));
+
+  Future<int> countMastered() async {
+    final result = await customSelect(
+      'SELECT COUNT(*) as c FROM q_states WHERE mastery_level >= 3',
+      readsFrom: {qStates},
+    ).getSingle();
+    return result.read<int>('c');
+  }
 }
