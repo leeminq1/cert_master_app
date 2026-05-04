@@ -10,6 +10,21 @@ import '../../providers/study_providers.dart';
 import '../../services/backup_service.dart';
 import '../../services/notification_service.dart';
 
+final _studyStatsProvider = FutureProvider.autoDispose<({int today, int totalCompleted})>((ref) async {
+  final db = ref.watch(databaseProvider);
+  final now = DateTime.now();
+  final todayStr =
+      '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+  final activityMap = await db.dailyActivityDao.getActivityCountByDate();
+  final today = activityMap[todayStr] ?? 0;
+  final result = await db.customSelect(
+    'SELECT COUNT(*) as c FROM q_states WHERE mastery_level > 0',
+    readsFrom: {db.qStates},
+  ).getSingle();
+  final totalCompleted = result.read<int>('c');
+  return (today: today, totalCompleted: totalCompleted);
+});
+
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
@@ -234,6 +249,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final dailyGoal = ref.watch(dailyGoalProvider);
     final certsAsync = ref.watch(allCertsProvider);
     final streakAsync = ref.watch(streakProvider);
+    final studyStatsAsync = ref.watch(_studyStatsProvider);
 
     return Scaffold(
       backgroundColor: bg,
@@ -250,6 +266,28 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           // ── MY STUDY ───────────────────────────────────────────────────────
           _SectionHeader(label: '내 학습', textDim: textDim),
           _SettingsCard(surface: surface, border: border, children: [
+            _InfoTile(
+              label: '오늘 학습',
+              value: studyStatsAsync.when(
+                  data: (s) => '${s.today}문항',
+                  loading: () => '-',
+                  error: (_, _) => '-'),
+              lime: lime,
+              text: text,
+              textDim: textDim,
+            ),
+            Divider(height: 1, color: border),
+            _InfoTile(
+              label: '전체 완료',
+              value: studyStatsAsync.when(
+                  data: (s) => '${s.totalCompleted}문항',
+                  loading: () => '-',
+                  error: (_, _) => '-'),
+              lime: lime,
+              text: text,
+              textDim: textDim,
+            ),
+            Divider(height: 1, color: border),
             _InfoTile(
               label: '연속 학습일',
               value: streakAsync.when(
