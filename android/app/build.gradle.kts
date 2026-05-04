@@ -1,4 +1,4 @@
-﻿plugins {
+plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.urbanfarmer.urban_farmer_pro"
+        applicationId = "com.min21.cert_master"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
