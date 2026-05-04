@@ -1,190 +1,225 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>개인정보처리방침 — 자격증 마스터</title>
-  <style>
-    :root {
-      --bg: #0f0f0f;
-      --surface: #1a1a1a;
-      --border: #2a2a2a;
-      --text: #f0f0f0;
-      --text-dim: #a0a0a0;
-      --lime: #a3e635;
-      --lime-bg: rgba(163,230,53,0.08);
-    }
-    @media (prefers-color-scheme: light) {
-      :root {
-        --bg: #f8f9fa;
-        --surface: #ffffff;
-        --border: #e0e0e0;
-        --text: #1a1a1a;
-        --text-dim: #555555;
-        --lime: #5a8a00;
-        --lime-bg: rgba(90,138,0,0.07);
-      }
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 15px;
-      line-height: 1.75;
-      padding: 0 16px 60px;
-    }
-    header {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 48px 0 32px;
-      border-bottom: 1px solid var(--border);
-    }
-    .app-badge {
-      display: inline-block;
-      background: var(--lime-bg);
-      color: var(--lime);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      padding: 3px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--lime);
-      margin-bottom: 12px;
-    }
-    h1 {
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-    .meta {
-      font-size: 13px;
-      color: var(--text-dim);
-    }
-    main {
-      max-width: 720px;
-      margin: 0 auto;
-      padding-top: 32px;
-    }
-    .highlight {
-      background: var(--lime-bg);
-      border: 1px solid var(--lime);
-      border-left: 4px solid var(--lime);
-      border-radius: 8px;
-      padding: 16px 20px;
-      margin-bottom: 36px;
-      font-weight: 600;
-      color: var(--lime);
-      font-size: 15px;
-    }
-    section {
-      margin-bottom: 36px;
-    }
-    h2 {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--lime);
-      margin-bottom: 10px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid var(--border);
-    }
-    p { color: var(--text-dim); margin-bottom: 8px; }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    ul li {
-      color: var(--text-dim);
-      padding: 3px 0 3px 18px;
-      position: relative;
-    }
-    ul li::before {
-      content: '·';
-      position: absolute;
-      left: 4px;
-      color: var(--lime);
-      font-weight: 700;
-    }
-    a { color: var(--lime); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    footer {
-      max-width: 720px;
-      margin: 0 auto;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      font-size: 12px;
-      color: var(--text-dim);
-      text-align: center;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개인정보처리방침 — 자격증 마스터</title>
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --surface: #1a1a1a;
+            --border: #2a2a2a;
+            --text: #f0f0f0;
+            --text-dim: #a0a0a0;
+            --lime: #a3e635;
+            --lime-bg: rgba(163, 230, 53, 0.08);
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f8f9fa;
+                --surface: #ffffff;
+                --border: #e0e0e0;
+                --text: #1a1a1a;
+                --text-dim: #555555;
+                --lime: #5a8a00;
+                --lime-bg: rgba(90, 138, 0, 0.07);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 15px;
+            line-height: 1.75;
+            padding: 0 16px 60px;
+        }
+
+        header {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 0 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .app-badge {
+            display: inline-block;
+            background: var(--lime-bg);
+            color: var(--lime);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            padding: 3px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--lime);
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .meta {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding-top: 32px;
+        }
+
+        .highlight {
+            background: var(--lime-bg);
+            border: 1px solid var(--lime);
+            border-left: 4px solid var(--lime);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 36px;
+            font-weight: 600;
+            color: var(--lime);
+            font-size: 15px;
+        }
+
+        section {
+            margin-bottom: 36px;
+        }
+
+        h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--lime);
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        p {
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            color: var(--text-dim);
+            padding: 3px 0 3px 18px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: '·';
+            position: absolute;
+            left: 4px;
+            color: var(--lime);
+            font-weight: 700;
+        }
+
+        a {
+            color: var(--lime);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            max-width: 720px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-dim);
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
-  <header>
-    <div class="app-badge">자격증 마스터</div>
-    <h1>개인정보처리방침</h1>
-    <p class="meta">최종 업데이트: 2025년 5월 4일</p>
-  </header>
+    <header>
+        <div class="app-badge">자격증 마스터</div>
+        <h1>개인정보처리방침</h1>
+        <p class="meta">최종 업데이트: 2025년 5월 4일</p>
+    </header>
 
-  <main>
-    <div class="highlight">
-      🔒 이 앱은 어떤 개인정보도 수집하거나 외부 서버로 전송하지 않습니다.
-      모든 데이터는 사용자의 기기 내에만 저장됩니다.
-    </div>
+    <main>
+        <div class="highlight">
+            🔒 이 앱은 어떤 개인정보도 수집하거나 외부 서버로 전송하지 않습니다.
+            모든 데이터는 사용자의 기기 내에만 저장됩니다.
+        </div>
 
-    <section>
-      <h2>1. 수집하는 정보</h2>
-      <p>자격증 마스터는 개인 식별 정보를 수집하지 않습니다. 회원가입, 로그인, 이메일 주소, 이름, 위치 정보 등 어떠한 개인정보도 요구하지 않습니다.</p>
-    </section>
+        <section>
+            <h2>1. 수집하는 정보</h2>
+            <p>자격증 마스터는 개인 식별 정보를 수집하지 않습니다. 회원가입, 로그인, 이메일 주소, 이름, 위치 정보 등 어떠한 개인정보도 요구하지 않습니다.</p>
+        </section>
 
-    <section>
-      <h2>2. 기기 내 저장 데이터</h2>
-      <p>앱의 정상적인 작동을 위해 다음 데이터를 사용자의 기기 로컬 저장소에만 저장합니다:</p>
-      <ul>
-        <li>학습 진도 및 복습 일정 (간격 반복 알고리즘 데이터)</li>
-        <li>문제 풀이 기록 및 정답률</li>
-        <li>북마크된 문항 목록</li>
-        <li>앱 설정 (테마, 알림 시간, 학습 목표 등)</li>
-        <li>일별 학습 활동 기록 (히트맵 표시용)</li>
-      </ul>
-      <p>이 데이터는 오직 해당 기기에만 존재하며, 외부로 전송되지 않습니다.</p>
-    </section>
+        <section>
+            <h2>2. 기기 내 저장 데이터</h2>
+            <p>앱의 정상적인 작동을 위해 다음 데이터를 사용자의 기기 로컬 저장소에만 저장합니다:</p>
+            <ul>
+                <li>학습 진도 및 복습 일정 (간격 반복 알고리즘 데이터)</li>
+                <li>문제 풀이 기록 및 정답률</li>
+                <li>북마크된 문항 목록</li>
+                <li>앱 설정 (테마, 알림 시간, 학습 목표 등)</li>
+                <li>일별 학습 활동 기록 (히트맵 표시용)</li>
+            </ul>
+            <p>이 데이터는 오직 해당 기기에만 존재하며, 외부로 전송되지 않습니다.</p>
+        </section>
 
-    <section>
-      <h2>3. 인터넷 권한</h2>
-      <p>앱은 인터넷 연결 권한을 요청하지 않습니다. 오프라인 환경에서 완전히 동작합니다.</p>
-    </section>
+        <section>
+            <h2>3. 인터넷 권한</h2>
+            <p>앱은 인터넷 연결 권한을 요청하지 않습니다. 오프라인 환경에서 완전히 동작합니다.</p>
+        </section>
 
-    <section>
-      <h2>4. 제3자 서비스</h2>
-      <p>자격증 마스터는 광고 네트워크, 분석 서비스, 소셜 미디어 플랫폼 등 어떠한 제3자 SDK도 사용하지 않습니다.</p>
-      <p>데이터 내보내기(백업) 기능 사용 시, 사용자가 직접 선택한 공유 앱(이메일, 클라우드 스토리지 등)을 통해 파일이 전송됩니다. 이 과정은 사용자가 직접 제어하며, 앱이 자동으로 전송하지 않습니다.</p>
-    </section>
+        <section>
+            <h2>4. 제3자 서비스</h2>
+            <p>자격증 마스터는 광고 네트워크, 분석 서비스, 소셜 미디어 플랫폼 등 어떠한 제3자 SDK도 사용하지 않습니다.</p>
+            <p>데이터 내보내기(백업) 기능 사용 시, 사용자가 직접 선택한 공유 앱(이메일, 클라우드 스토리지 등)을 통해 파일이 전송됩니다. 이 과정은 사용자가 직접 제어하며, 앱이 자동으로 전송하지
+                않습니다.</p>
+        </section>
 
-    <section>
-      <h2>5. 알림 권한</h2>
-      <p>매일 학습 알림을 원하는 경우 알림 권한을 요청합니다. 이 권한은 기기 내에서 예약된 알림 표시에만 사용되며, 어떤 데이터도 외부로 전송하지 않습니다. 알림은 언제든지 기기 설정에서 비활성화할 수 있습니다.</p>
-    </section>
+        <section>
+            <h2>5. 알림 권한</h2>
+            <p>매일 학습 알림을 원하는 경우 알림 권한을 요청합니다. 이 권한은 기기 내에서 예약된 알림 표시에만 사용되며, 어떤 데이터도 외부로 전송하지 않습니다. 알림은 언제든지 기기 설정에서
+                비활성화할 수 있습니다.</p>
+        </section>
 
-    <section>
-      <h2>6. 아동 개인정보</h2>
-      <p>본 앱은 만 13세 미만 아동으로부터 의도적으로 정보를 수집하지 않습니다. 앱이 개인정보를 수집하지 않으므로 아동 이용에도 안전합니다.</p>
-    </section>
+        <section>
+            <h2>6. 아동 개인정보</h2>
+            <p>본 앱은 만 13세 미만 아동으로부터 의도적으로 정보를 수집하지 않습니다. 앱이 개인정보를 수집하지 않으므로 아동 이용에도 안전합니다.</p>
+        </section>
 
-    <section>
-      <h2>7. 방침 변경</h2>
-      <p>개인정보처리방침이 변경될 경우, 이 페이지에 최신 내용을 게시합니다. 변경 전에 본 페이지를 정기적으로 확인하시기를 권장합니다.</p>
-    </section>
+        <section>
+            <h2>7. 방침 변경</h2>
+            <p>개인정보처리방침이 변경될 경우, 이 페이지에 최신 내용을 게시합니다. 변경 전에 본 페이지를 정기적으로 확인하시기를 권장합니다.</p>
+        </section>
 
-    <section>
-      <h2>8. 문의</h2>
-      <p>개인정보처리방침에 관한 문의사항이 있으시면 아래로 연락해 주세요:</p>
-      <p>이메일: <a href="mailto:profriendlyq@gmail.com">profriendlyq@gmail.com</a></p>
-    </section>
-  </main>
+        <section>
+            <h2>8. 문의</h2>
+            <p>개인정보처리방침에 관한 문의사항이 있으시면 아래로 연락해 주세요:</p>
+            <p>이메일: <a href="mailto:profriendlyq@gmail.com">profriendlyq@gmail.com</a></p>
+        </section>
+    </main>
 
-  <footer>
-    <p>© 2025 자격증 마스터. All rights reserved.</p>
-  </footer>
+    <footer>
+        <p>© 2025 자격증 마스터. All rights reserved.</p>
+    </footer>
 </body>
+
 </html>
