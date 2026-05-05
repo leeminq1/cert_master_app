@@ -2,7 +2,7 @@ name: cert_master
 description: "자격증 마스터 - 23개 국가기술자격증 학습 앱"
 publish_to: 'none'
 
-version: 1.0.0+2
+version: 1.0.0+3
 
 environment:
   sdk: ^3.10.8
