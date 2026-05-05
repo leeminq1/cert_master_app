@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/ads/ad_banner_widget.dart';
 import '../../core/theme/app_colors.dart';
 import '../../providers/cert_providers.dart';
 import '../../providers/study_providers.dart';
@@ -117,16 +118,22 @@ class HomeScreen extends ConsumerWidget {
           );
         },
       ),
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_outlined), label: '홈'),
-          NavigationDestination(
-              icon: Icon(Icons.bar_chart_outlined), label: '통계'),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const AdBannerWidget(),
+          NavigationBar(
+            destinations: const [
+              NavigationDestination(icon: Icon(Icons.home_outlined), label: '홈'),
+              NavigationDestination(
+                  icon: Icon(Icons.bar_chart_outlined), label: '통계'),
+            ],
+            selectedIndex: 0,
+            onDestinationSelected: (i) {
+              if (i == 1) context.push('/stats');
+            },
+          ),
         ],
-        selectedIndex: 0,
-        onDestinationSelected: (i) {
-          if (i == 1) context.push('/stats');
-        },
       ),
     );
   }

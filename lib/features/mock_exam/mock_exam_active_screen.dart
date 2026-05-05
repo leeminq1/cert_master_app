@@ -144,7 +144,8 @@ class _MockExamActiveScreenState extends ConsumerState<MockExamActiveScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: SafeArea(
+        child: Column(
         children: [
           LinearProgressIndicator(
             value: (_currentIndex + 1) / _questions.length,
@@ -251,6 +252,7 @@ class _MockExamActiveScreenState extends ConsumerState<MockExamActiveScreen> {
           else
             const SizedBox(height: 24),
         ],
+      ),
       ),
     );
   }

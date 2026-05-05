@@ -42,6 +42,25 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     ref.read(databaseProvider).settingsDao.setLastQuizIndex(widget.certId, newIndex);
   }
 
+  // "다음" 버튼: 현재 문제를 봤음으로 표시 후 이동
+  Future<void> _navigateNext(dynamic q, int idx) async {
+    final db = ref.read(databaseProvider);
+    final existing = await db.qStateDao.getState(q.id, widget.certId);
+    if (existing == null) {
+      await db.qStateDao.upsertState(QStatesCompanion(
+        questionId: Value(q.id),
+        certId: Value(widget.certId),
+        masteryLevel: const Value(1),
+        easeFactor: const Value(2.5),
+        interval: const Value(1),
+        repetitions: const Value(0),
+        nextReview: Value(DateTime.now().add(const Duration(days: 1))),
+        bookmarked: const Value(false),
+      ));
+    }
+    _navigateToIndex(idx + 1);
+  }
+
   void _toggleAccordion(int i) {
     setState(() {
       if (_expanded.contains(i)) {
@@ -273,7 +292,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                           ),
                           const Spacer(),
                           GestureDetector(
-                            onTap: idx < questions.length - 1 ? () { _navigateToIndex(idx + 1); } : null,
+                            onTap: idx < questions.length - 1 ? () => _navigateNext(q, idx) : null,
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                               decoration: BoxDecoration(border: Border.all(color: idx < questions.length - 1 ? border : border.withAlpha(60)), borderRadius: BorderRadius.circular(8)),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/ads/ad_banner_widget.dart';
 import '../../core/theme/app_colors.dart';
 import '../../providers/cert_providers.dart';
 
@@ -19,6 +20,7 @@ class CertDetailScreen extends ConsumerWidget {
     final lime = isDark ? AppColors.darkLime : AppColors.lightLime;
 
     return Scaffold(
+      bottomNavigationBar: const SafeArea(top: false, child: AdBannerWidget()),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

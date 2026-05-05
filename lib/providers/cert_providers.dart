@@ -14,7 +14,8 @@ final certByIdProvider =
 });
 
 final certProgressProvider =
-    FutureProvider.family<int, String>((ref, certId) async {
+    StreamProvider.family<int, String>((ref, certId) {
   final db = ref.watch(databaseProvider);
-  return db.qStateDao.countCompletedByCert(certId);
+  // qState 행이 있는 문항 수 = 열람·채점·다음 버튼 모두 포함
+  return db.qStateDao.watchAllForCert(certId).map((states) => states.length);
 });

@@ -114,7 +114,8 @@ class _OneMinCoreScreenState extends ConsumerState<OneMinCoreScreen> {
                   child: Text('AI 해설 데이터가 없습니다',
                       style: GoogleFonts.notoSansKr(color: textDim)),
                 )
-              : Column(
+              : SafeArea(
+                  child: Column(
                   children: [
                     LinearProgressIndicator(
                       value: _autoProgress,
@@ -224,6 +225,7 @@ class _OneMinCoreScreenState extends ConsumerState<OneMinCoreScreen> {
                       ),
                     ),
                   ],
+                ),
                 ),
     );
   }

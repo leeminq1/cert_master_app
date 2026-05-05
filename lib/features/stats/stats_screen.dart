@@ -18,7 +18,7 @@ typedef _StatsData = ({
   List<Cert> certs,
 });
 
-final _statsProvider = FutureProvider<_StatsData>((ref) async {
+final _statsProvider = FutureProvider.autoDispose<_StatsData>((ref) async {
   final db = ref.watch(databaseProvider);
   final certs = await db.certDao.getAllCerts();
   final totalQuestions = certs.fold(0, (sum, c) => sum + c.totalItems);
@@ -84,16 +84,18 @@ class _StatsBody extends StatelessWidget {
     final amber = isDark ? AppColors.darkAmber : AppColors.lightAmber;
     final rose = isDark ? AppColors.darkRose : AppColors.lightRose;
 
-    final scorePercent = data.totalQuestions > 0
+    final scoreRaw = data.totalQuestions > 0
         ? (data.mastered / data.totalQuestions * 100).round()
         : 0;
+    // 1문항이라도 숙달 시 최소 1점 표시
+    final scorePercent = data.mastered > 0 ? max(1, scoreRaw) : 0;
     final scoreColor =
         scorePercent >= 60 ? lime : (scorePercent >= 40 ? amber : rose);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
       children: [
-        // ── 예상 점수 ──────────────────────────────
+        // ── 전체 자격증 진도율 ──────────────────────────────
         _Card(surface: surface, border: border, child: Padding(
           padding: const EdgeInsets.all(20),
           child: Row(
@@ -102,12 +104,12 @@ class _StatsBody extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('예상 점수',
+                    Text('전체 자격증 진도율',
                         style: GoogleFonts.notoSansKr(
                             fontSize: 12, color: textDim,
                             fontWeight: FontWeight.w500)),
                     const SizedBox(height: 4),
-                    Text('${data.mastered} / ${data.totalQuestions} 문항 숙달',
+                    Text('${data.mastered} / ${data.totalQuestions} 문항 학습',
                         style: GoogleFonts.notoSansKr(
                             fontSize: 12, color: textDim)),
                   ],
@@ -119,7 +121,7 @@ class _StatsBody extends StatelessWidget {
                     fontSize: 56, fontWeight: FontWeight.w900,
                     color: scoreColor),
               ),
-              Text('점',
+              Text('%',
                   style: GoogleFonts.notoSansKr(
                       fontSize: 16, fontWeight: FontWeight.w600,
                       color: scoreColor)),

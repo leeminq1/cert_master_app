@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/ads/ad_banner_widget.dart';
 import '../../core/theme/app_colors.dart';
 import '../../providers/cert_providers.dart';
 
@@ -27,13 +28,14 @@ class MockExamSetupScreen extends ConsumerWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: text),
-          onPressed: () => context.pop(),
+          onPressed: () => context.canPop() ? context.pop() : context.go('/cert/$certId'),
         ),
         title: Text(
           '모의고사',
           style: GoogleFonts.notoSansKr(fontSize: 16, fontWeight: FontWeight.w700, color: text),
         ),
       ),
+      bottomNavigationBar: const SafeArea(top: false, child: AdBannerWidget()),
       body: certAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('오류: $e')),

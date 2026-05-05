@@ -48,7 +48,7 @@ class QStateDao extends DatabaseAccessor<AppDatabase> with _$QStateDaoMixin {
 
   Future<int> countMastered() async {
     final result = await customSelect(
-      'SELECT COUNT(*) as c FROM q_states WHERE mastery_level >= 3',
+      'SELECT COUNT(*) as c FROM q_states',
       readsFrom: {qStates},
     ).getSingle();
     return result.read<int>('c');
