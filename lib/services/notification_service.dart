@@ -17,7 +17,7 @@ class NotificationService {
       // Fallback to UTC if timezone data unavailable
     }
 
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const android = AndroidInitializationSettings('@mipmap/launcher_icon');
     const settings = InitializationSettings(android: android);
     await _plugin.initialize(settings);
   }
