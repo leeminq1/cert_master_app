@@ -14,7 +14,7 @@ class NotificationService {
     try {
       tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
     } catch (_) {
-      // Fallback to UTC if timezone data unavailable
+      tz.setLocalLocation(tz.getLocation('UTC'));
     }
 
     const android = AndroidInitializationSettings('@mipmap/launcher_icon');

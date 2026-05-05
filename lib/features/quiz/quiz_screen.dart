@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +21,7 @@ class QuizScreen extends ConsumerStatefulWidget {
 }
 
 class _QuizScreenState extends ConsumerState<QuizScreen> {
-  Set<int> _expanded = {0};
+  Set<int> _expanded = {0, 1, 2};
   bool _grading = false;
 
   @override
@@ -80,59 +80,67 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     if (_grading) return;
     setState(() => _grading = true);
 
-    final db = ref.read(databaseProvider);
-    final now = DateTime.now();
-    final today =
-        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    try {
+      final db = ref.read(databaseProvider);
+      final now = DateTime.now();
+      final today =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
-    final currentState = await db.qStateDao.getState(q.id, widget.certId);
-    final sm2 = computeSM2(
-      easeFactor: currentState?.easeFactor ?? 2.5,
-      interval: currentState?.interval ?? 1,
-      repetitions: currentState?.repetitions ?? 0,
-      masteryLevel: currentState?.masteryLevel ?? 0,
-      grade: grade,
-    );
+      final currentState = await db.qStateDao.getState(q.id, widget.certId);
+      final sm2 = computeSM2(
+        easeFactor: currentState?.easeFactor ?? 2.5,
+        interval: currentState?.interval ?? 1,
+        repetitions: currentState?.repetitions ?? 0,
+        masteryLevel: currentState?.masteryLevel ?? 0,
+        grade: grade,
+      );
 
-    await db.qStateDao.upsertState(QStatesCompanion(
-      questionId: Value(q.id),
-      certId: Value(widget.certId),
-      easeFactor: Value(sm2.easeFactor),
-      interval: Value(sm2.interval),
-      repetitions: Value(sm2.repetitions),
-      nextReview: Value(sm2.nextReview),
-      masteryLevel: Value(sm2.masteryLevel),
-      bookmarked: currentState != null
-          ? Value(currentState.bookmarked)
-          : const Value(false),
-    ));
+      await db.qStateDao.upsertState(QStatesCompanion(
+        questionId: Value(q.id),
+        certId: Value(widget.certId),
+        easeFactor: Value(sm2.easeFactor),
+        interval: Value(sm2.interval),
+        repetitions: Value(sm2.repetitions),
+        nextReview: Value(sm2.nextReview),
+        masteryLevel: Value(sm2.masteryLevel),
+        bookmarked: currentState != null
+            ? Value(currentState.bookmarked)
+            : const Value(false),
+      ));
 
-    await db.attemptDao.insertAttempt(AttemptsCompanion(
-      questionId: Value(q.id),
-      certId: Value(widget.certId),
-      grade: Value(grade),
-      attemptedAt: Value(now),
-    ));
+      await db.attemptDao.insertAttempt(AttemptsCompanion(
+        questionId: Value(q.id),
+        certId: Value(widget.certId),
+        grade: Value(grade),
+        attemptedAt: Value(now),
+      ));
 
-    await db.dailyActivityDao.incrementActivity(
-      today,
-      widget.certId,
-      correct: grade >= 2,
-    );
+      await db.dailyActivityDao.incrementActivity(
+        today,
+        widget.certId,
+        correct: grade >= 2,
+      );
 
-    final notifRequested = await db.settingsDao.get('notification_requested');
-    if (notifRequested == null) {
-      await NotificationService.requestPermission();
-      await db.settingsDao.set('notification_requested', '1');
-    }
-    await NotificationService.rescheduleReminder();
+      final notifRequested = await db.settingsDao.get('notification_requested');
+      if (notifRequested == null) {
+        await NotificationService.requestPermission();
+        await db.settingsDao.set('notification_requested', '1');
+      }
+      await NotificationService.rescheduleReminder();
 
-    final next = currentIndex + 1;
-    if (next < questions.length) {
-      _navigateToIndex(next);
-    } else {
-      ref.read(databaseProvider).settingsDao.setLastQuizIndex(widget.certId, 0);
-      if (mounted) Navigator.of(context).pop();
+      final next = currentIndex + 1;
+      if (next < questions.length) {
+        _navigateToIndex(next);
+      } else {
+        ref.read(databaseProvider).settingsDao.setLastQuizIndex(widget.certId, 0);
+        if (mounted) Navigator.of(context).pop();
+      }
+    } catch (e, st) {
+      debugPrint('Error in _submitGrade: $e\n$st');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        setState(() => _grading = false);
+      }
     }
   }
 
@@ -140,7 +148,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   Widget build(BuildContext context) {
     ref.listen(currentQuestionIndexProvider(widget.certId), (prev, next) {
       if (prev != next) {
-        setState(() { _expanded = {0}; _grading = false; });
+        setState(() { _expanded = {0, 1, 2}; _grading = false; });
       }
     });
 

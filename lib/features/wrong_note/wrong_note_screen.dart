@@ -207,7 +207,12 @@ class _QuestionList extends StatelessWidget {
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: EdgeInsets.only(
+        left: 14,
+        right: 14,
+        top: 12,
+        bottom: 12 + MediaQuery.paddingOf(context).bottom + 40,
+      ),
       itemCount: questions.length,
       itemBuilder: (context, i) {
         final q = questions[i];

@@ -11,10 +11,10 @@ final certQStatesProvider =
 
 /// Consecutive-day streak based on daily_activities.
 /// Allows today to be absent (streak persists until you miss a full day).
-final streakProvider = FutureProvider<int>((ref) async {
+  final streakProvider = FutureProvider<int>((ref) async {
   final db = ref.watch(databaseProvider);
   final dates = await db.dailyActivityDao.getActiveDates();
-  if (dates.isEmpty) return 0;
+  if (dates.isEmpty) return 1;
 
   final dateSet = dates.toSet();
   int streak = 0;
@@ -36,5 +36,5 @@ final streakProvider = FutureProvider<int>((ref) async {
       break;
     }
   }
-  return streak;
+  return streak == 0 ? 1 : streak;
 });

@@ -28,7 +28,7 @@ class ExplanationScreen extends ConsumerStatefulWidget {
 }
 
 class _ExplanationScreenState extends ConsumerState<ExplanationScreen> {
-  final Set<int> _expanded = {0}; // 배경 섹션 기본 펼침
+  final Set<int> _expanded = {0, 1, 2}; // 배경, 개념, 시험팁 기본 펼침
   bool _grading = false;
 
   @override
@@ -285,70 +285,78 @@ class _ExplanationScreenState extends ConsumerState<ExplanationScreen> {
     if (_grading) return;
     setState(() => _grading = true);
 
-    final db = ref.read(databaseProvider);
-    final now = DateTime.now();
-    final today =
-        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    try {
+      final db = ref.read(databaseProvider);
+      final now = DateTime.now();
+      final today =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
-    // 1. Load current SM-2 state
-    final currentState = await db.qStateDao.getState(q.id, widget.certId);
+      // 1. Load current SM-2 state
+      final currentState = await db.qStateDao.getState(q.id, widget.certId);
 
-    // 2. Compute SM-2
-    final sm2 = computeSM2(
-      easeFactor: currentState?.easeFactor ?? 2.5,
-      interval: currentState?.interval ?? 1,
-      repetitions: currentState?.repetitions ?? 0,
-      masteryLevel: currentState?.masteryLevel ?? 0,
-      grade: grade,
-    );
+      // 2. Compute SM-2
+      final sm2 = computeSM2(
+        easeFactor: currentState?.easeFactor ?? 2.5,
+        interval: currentState?.interval ?? 1,
+        repetitions: currentState?.repetitions ?? 0,
+        masteryLevel: currentState?.masteryLevel ?? 0,
+        grade: grade,
+      );
 
-    // 3. Upsert QState with SM-2 results (preserve bookmark)
-    await db.qStateDao.upsertState(QStatesCompanion(
-      questionId: Value(q.id),
-      certId: Value(widget.certId),
-      easeFactor: Value(sm2.easeFactor),
-      interval: Value(sm2.interval),
-      repetitions: Value(sm2.repetitions),
-      nextReview: Value(sm2.nextReview),
-      masteryLevel: Value(sm2.masteryLevel),
-      bookmarked: currentState != null
-          ? Value(currentState.bookmarked)
-          : const Value(false),
-    ));
+      // 3. Upsert QState with SM-2 results (preserve bookmark)
+      await db.qStateDao.upsertState(QStatesCompanion(
+        questionId: Value(q.id),
+        certId: Value(widget.certId),
+        easeFactor: Value(sm2.easeFactor),
+        interval: Value(sm2.interval),
+        repetitions: Value(sm2.repetitions),
+        nextReview: Value(sm2.nextReview),
+        masteryLevel: Value(sm2.masteryLevel),
+        bookmarked: currentState != null
+            ? Value(currentState.bookmarked)
+            : const Value(false),
+      ));
 
-    // 4. Record attempt
-    await db.attemptDao.insertAttempt(AttemptsCompanion(
-      questionId: Value(q.id),
-      certId: Value(widget.certId),
-      grade: Value(grade),
-      attemptedAt: Value(now),
-    ));
+      // 4. Record attempt
+      await db.attemptDao.insertAttempt(AttemptsCompanion(
+        questionId: Value(q.id),
+        certId: Value(widget.certId),
+        grade: Value(grade),
+        attemptedAt: Value(now),
+      ));
 
-    // 5. Update daily activity
-    await db.dailyActivityDao.incrementActivity(
-      today,
-      widget.certId,
-      correct: grade >= 2,
-    );
+      // 5. Update daily activity
+      await db.dailyActivityDao.incrementActivity(
+        today,
+        widget.certId,
+        correct: grade >= 2,
+      );
 
-    // 6. First-time: request notification permission + schedule reminder
-    final notifRequested =
-        await db.settingsDao.get('notification_requested');
-    if (notifRequested == null) {
-      await NotificationService.requestPermission();
-      await db.settingsDao.set('notification_requested', '1');
+      // 6. First-time: request notification permission + schedule reminder
+      final notifRequested =
+          await db.settingsDao.get('notification_requested');
+      if (notifRequested == null) {
+        await NotificationService.requestPermission();
+        await db.settingsDao.set('notification_requested', '1');
+      }
+      await NotificationService.rescheduleReminder();
+      await NotificationService.scheduleReviewNotification(sm2.nextReview);
+
+      // 7. Advance quiz index
+      final next = currentIndex + 1;
+      if (next < questions.length) {
+        ref.read(currentQuestionIndexProvider(widget.certId).notifier).state =
+            next;
+      }
+
+      if (context.mounted) context.pop();
+    } catch (e, st) {
+      debugPrint('Error in _submitGrade: $e\n$st');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
+      if (mounted) setState(() => _grading = false);
     }
-    await NotificationService.rescheduleReminder();
-    await NotificationService.scheduleReviewNotification(sm2.nextReview);
-
-    // 7. Advance quiz index
-    final next = currentIndex + 1;
-    if (next < questions.length) {
-      ref.read(currentQuestionIndexProvider(widget.certId).notifier).state =
-          next;
-    }
-
-    if (context.mounted) context.pop();
   }
 }
 

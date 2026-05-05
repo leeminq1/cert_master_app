@@ -12,17 +12,25 @@ class DailyActivityDao extends DatabaseAccessor<AppDatabase>
   Future<void> upsert(DailyActivitiesCompanion entry) =>
       into(dailyActivities).insertOnConflictUpdate(entry);
 
-  /// Increments count (and optionally correctCount) for the given date/cert.
   Future<void> incrementActivity(String date, String certId,
       {bool correct = false}) async {
-    final correctVal = correct ? 1 : 0;
-    await customStatement(
-      'INSERT INTO daily_activities (date, cert_id, count, correct_count) '
-      'VALUES (?, ?, 1, ?) '
-      'ON CONFLICT(date, cert_id) DO UPDATE SET '
-      'count = count + 1, correct_count = correct_count + ?',
-      [date, certId, correctVal, correctVal],
-    );
+    final existing = await (select(dailyActivities)
+          ..where((d) => d.date.equals(date) & d.certId.equals(certId)))
+        .getSingleOrNull();
+
+    if (existing == null) {
+      await into(dailyActivities).insert(DailyActivitiesCompanion.insert(
+        date: date,
+        certId: certId,
+        count: const Value(1),
+        correctCount: Value(correct ? 1 : 0),
+      ));
+    } else {
+      await update(dailyActivities).replace(existing.copyWith(
+        count: existing.count + 1,
+        correctCount: existing.correctCount + (correct ? 1 : 0),
+      ));
+    }
   }
 
   Future<List<String>> getActiveDates() async {
